@@ -23,17 +23,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-umami:/var/lib/postgresql/data
-  umami:
-    image: ghcr.io/umami-software/umami:postgresql-latest
-    ports:
-      - '3001:3000'
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      DATABASE_TYPE: postgresql
-      HASH_SALT: ${HASH_SALT}
-    depends_on:
-      - postgres
-    restart: always
 
 volumes:
     postgres-umami:
