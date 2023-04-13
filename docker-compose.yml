@@ -5,10 +5,10 @@ services:
     depends_on:
       - postgres
     build:
-      context: ./web
+      context: ./analytics-sdk
       target: development
     volumes:
-      - ./web:/usr/src/app
+      - ./analytics-sdk:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"

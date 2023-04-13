@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-gys-track>
     Nuxt module playground!
   </div>
 </template>

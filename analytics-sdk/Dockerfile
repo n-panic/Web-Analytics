@@ -16,7 +16,7 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV production
 
-RUN npm run build
+RUN npm run dev:build
 
 RUN npm ci --only=production && npm cache clean --force
 
@@ -24,4 +24,4 @@ FROM build as production
 
 WORKDIR /usr/src/app
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["node", "playground/.output/server/index.mjs"]
