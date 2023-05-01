@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  nuxt:
+  module:
     depends_on:
       - postgres
     build:
@@ -13,7 +13,7 @@ services:
     ports:
       - "3000:3000"
 
-  nuxt-analytics:
+  dashboard:
     depends_on:
       - postgres
     environment:
@@ -24,6 +24,7 @@ services:
     volumes:
       - ./analytics-website:/usr/src/app
       - /usr/src/app/node_modules
+      - /usr/src/app/.nuxt
     ports:
       - "3001:3000"
 
@@ -32,13 +33,18 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres-analytics:/var/lib/postgresql/data
 
+  adminer:
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - "8080:8080"
 volumes:
     postgres-analytics:

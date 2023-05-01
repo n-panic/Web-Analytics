@@ -8,6 +8,8 @@ RUN npm ci
 
 COPY . .
 
+RUN npx prisma generate
+
 CMD ["npm", "run", "dev"]
 
 FROM development as build
@@ -18,7 +20,7 @@ ENV NODE_ENV production
 
 RUN npm run build
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm cache clean --force
 
 FROM build as production
 

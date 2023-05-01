@@ -1,14 +1,15 @@
-import { ref } from 'vue'
-import { useEventListener } from './event'
+import { ref, Ref } from 'vue'
+import {debouncedRef} from "./debouncedRef";
+import {useEventListener} from "@vueuse/core";
 
-export function useMouse() {
-  const x = ref(0)
-  const y = ref(0)
+export function useMouse(element: HTMLElement | Window = window): { x: Ref<number>, y: Ref<number> } {
+  const x: Ref<number> = debouncedRef(0, 1000)
+  const y: Ref<number> = debouncedRef(0, 1000)
 
-  useEventListener(window, 'mousemove', (event) => {
+  useEventListener(element, 'mousemove', (event: MouseEvent) => {
     x.value = event.pageX
     y.value = event.pageY
-  })
+  });
 
   return { x, y }
 }
