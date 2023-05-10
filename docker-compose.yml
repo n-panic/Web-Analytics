@@ -44,6 +44,8 @@ services:
   adminer:
     image: adminer:4.8.1
     restart: always
+    depends_on:
+      - postgres
     ports:
       - "8080:8080"
 volumes:
