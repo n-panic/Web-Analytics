@@ -1,15 +1,16 @@
-import {defineNuxtPlugin, NuxtApp} from '#app'
+import {defineNuxtPlugin, NuxtApp, useRuntimeConfig} from '#app'
 import {useEventListener} from '@vueuse/core'
 import {useStore} from "../lib/store";
-
+import {getFingerprint} from "../lib/fingerprint";
 // @ts-ignore
 export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
   const store = useStore;
+  const options = useRuntimeConfig().public.gysAnalyticsSdk;
   nuxtApp.vueApp.directive('gys-track',  {
-    mounted(el, binding) {
-      store.value.gysSessionId = crypto.randomUUID();
+    async mounted(el, binding) {
+      const fingerprint = await getFingerprint();
+      store.value.gysSessionId = fingerprint.visitorId;
       useEventListener(el, 'click', (event: MouseEvent) => {
-        console.log('click');
         // @ts-ignore
         store.value.events.push({
           type: 'click',
@@ -22,7 +23,16 @@ export default defineNuxtPlugin((nuxtApp: NuxtApp) => {
           },
           timestamp: Date.now()
         })
+        // const blob = new Blob([JSON.stringify(store.value)], {type: 'application/json'});
+        // navigator.sendBeacon(`${options.gysUrl}/api/stats`, blob);
       })
+
+      useEventListener(document, 'visibilitychange', (event) => {
+          if (document.visibilityState === "hidden") {
+            const blob = new Blob([JSON.stringify(store.value)], {type: 'application/json'});
+            navigator.sendBeacon(`${options.gysUrl}/api/stats`, blob);
+          }
+      }, {capture: true})
     },
 
     beforeUnmount(el, binding) {
