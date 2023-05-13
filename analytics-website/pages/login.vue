@@ -1,41 +1,38 @@
 <script setup>
+    const router = useRouter();
 
-const router = useRouter();
-
-async function registerUser(event) {
+async function loginUser(event) {
     event.preventDefault();
     const formElement = event.target.closest("form");
     const formData = new FormData(formElement);
-    const username = formData.get("username");
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const { data, error } = useFetch("/api/register", {
+    const { data, error } = useFetch("/api/auth", {
         method: "POST",
-        body: JSON.stringify({ username, email, password: password }),
+        body: JSON.stringify({ email, password }),
         headers: {
             "Content-Type": "application/json",
         },
     });
 
     if (data) {
-        router.push("/login");
+        router.push("/");
     }
     if (error) {
         console.log(error);
     }
 }
-
 </script>
-
 
 
 <template>
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Inscription
+            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Connexion
             </h2>
         </div>
+
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" action="#" method="POST">
                 <div>
@@ -45,16 +42,13 @@ async function registerUser(event) {
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                     </div>
                 </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Pseudo</label>
-                    <div class="mt-2">
-                        <input id="username" name="username" type="text" autocomplete="username" required=""
-                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                    </div>
-                </div>
+
                 <div>
                     <div class="flex items-center justify-between">
                         <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Mot de passe</label>
+                        <div class="text-sm">
+                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Mot de passe oublié?</a>
+                        </div>
                     </div>
                     <div class="mt-2">
                         <input id="password" name="password" type="password" autocomplete="current-password" required=""
@@ -63,17 +57,16 @@ async function registerUser(event) {
                 </div>
 
                 <div>
-                    <button type="submit" @click="registerUser"
-                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Inscription
-                    </button>
+                    <button type="submit" @click="loginUser"
+                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Connexion
+                        </button>
                 </div>
             </form>
 
             <p class="mt-10 text-center text-sm text-gray-500">
-                Vous avez déjà un compte?
+                Vous n'avez pas de compte?
                 {{ ' ' }}
-                <NuxtLink to="/login"><span class="text-indigo-600">Connexion</span></NuxtLink>
-            </p>
-        </div>
+                <NuxtLink to="/register"><span class="text-indigo-600">Inscription</span></NuxtLink>
+        </p>
     </div>
-</template>
+</div></template>
